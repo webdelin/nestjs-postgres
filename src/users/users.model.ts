@@ -22,6 +22,14 @@ export class User extends Model<User, UserCreationAttrs> {
 	@Column({type: DataType.STRING, allowNull: false})
 	password: string;
 
+	@ApiProperty({example:'false', description: 'Activated link Emai Verify'})
+	@Column({type: DataType.BOOLEAN, defaultValue: false})
+	isActivated: boolean;
+
+	@ApiProperty({example:'7f5397f2-6648-440f-84de-e150f6bc3e1a', description: 'Activate Link'})
+	@Column({type: DataType.STRING, allowNull: true})
+	activationLink: string;
+
 	@ApiProperty({example:'false', description: 'User Banned -> Dafault false'})
 	@Column({type: DataType.BOOLEAN, defaultValue: false})
 	banned: boolean;
