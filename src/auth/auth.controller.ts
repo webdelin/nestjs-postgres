@@ -1,9 +1,9 @@
-import {Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { AuthService } from './auth.service';
+import {Body, Controller, Post} from '@nestjs/common';
+import {ApiTags} from '@nestjs/swagger';
+import {CreateUserDto} from 'src/users/dto/create-user.dto';
+import {AuthService} from './auth.service';
 
-@ApiTags('Autorization')
+@ApiTags('Authorization')
 @Controller('auth')
 export class AuthController {
 
@@ -17,6 +17,7 @@ export class AuthController {
 
     @Post('/registration')
     registration(@Body() dto: CreateUserDto) {
+        console.log('auth.controller.');
         return this.authService.registration(dto);
     }
 }
