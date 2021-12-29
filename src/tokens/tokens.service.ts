@@ -13,7 +13,7 @@ export class TokensService {
     }
 
     async generateTokens(payload) {
-        const accessToken = this.jwtService.sign(payload, {expiresIn: '15s'});
+        const accessToken = this.jwtService.sign(payload, {expiresIn: '15m'});
         const refreshToken = this.jwtService.sign({id: payload.id}, {expiresIn: '30d'});
         return {
             accessToken,
@@ -26,19 +26,16 @@ export class TokensService {
         if (tokenData) {
             return this.tokenModel.update({refreshToken}, {where: {userId}});
         }
-        const token = await this.tokenModel.create({userId, refreshToken});
-        return token
+        return await this.tokenModel.create({userId, refreshToken});
     }
 
     async removeToken(refreshToken) {
         return this.tokenModel.update({refreshToken: ''}, {where: {refreshToken}});
     }
 
-    async validateRefreshToken(token:string){
+    async validateRefreshToken(token: string) {
         try {
-            // @ts-ignore
-            const userData = await this.jwtService.verify(token);
-            return userData;
+            return await this.jwtService.verify(token);
         } catch (e) {
             throw new UnauthorizedException({message: 'validateRefreshToken Error'});
         }
@@ -46,7 +43,7 @@ export class TokensService {
 
     async findRefreshToken(refreshToken: string) {
         const tokenData = await this.tokenModel.findOne({where: {refreshToken}});
-        if(!tokenData){
+        if (!tokenData) {
             throw new UnauthorizedException({message: 'refreshToken Not found'});
         }
         return tokenData
