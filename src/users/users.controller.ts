@@ -7,26 +7,26 @@ import {BanUserDto} from './dto/ban-user.dto';
 import {CreateUserDto} from './dto/create-user.dto';
 import {User} from './users.model';
 import {UsersService} from './users.service';
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 
 @ApiTags('Users')
 @Controller('users')
 export class UsersController {
-    constructor(private userService: UsersService) {
-    }
+    constructor(private userService: UsersService) {}
 
     @ApiOperation({summary: 'Create User'})
     @ApiResponse({status: 201, type: User})
     @Roles('ADMIN')
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Post()
     create(@Body() dto: CreateUserDto) {
-        console.log('user.controller.');
         return this.userService.create(dto);
     }
 
     @ApiOperation({summary: 'Get all Users'})
     @ApiResponse({status: 200, type: [User]})
     @Roles('ADMIN')
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Get()
     getAll() {
         return this.userService.getUsers();
@@ -35,7 +35,7 @@ export class UsersController {
     @ApiOperation({summary: 'Set Users Roles'})
     @ApiResponse({status: 200})
     @Roles('ADMIN')
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Post('/role')
     addRole(@Body() dto: AddRoleDto) {
         return this.userService.addRole(dto);
@@ -44,7 +44,7 @@ export class UsersController {
     @ApiOperation({summary: 'Set Baned Users'})
     @ApiResponse({status: 200})
     @Roles('ADMIN')
-    @UseGuards(RolesGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Post('/ban')
     ban(@Body() dto: BanUserDto) {
         return this.userService.ban(dto);
