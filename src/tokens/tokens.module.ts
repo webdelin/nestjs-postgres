@@ -13,10 +13,7 @@ import {JwtModule} from "@nestjs/jwt";
   imports: [
     SequelizeModule.forFeature([User, Token]),
     forwardRef(() => AuthModule),
-    JwtModule.register({
-      secret: process.env.REFRESH_TOKEN,
-      signOptions: { expiresIn: '30d'}
-    })
+    JwtModule.register({ secret: '3082580b-3d74-409e-a14c-354ddb28ca2b' })
   ],
   exports: [TokensService, JwtModule]
 })
