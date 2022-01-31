@@ -5,6 +5,9 @@ import {JwtService} from '@nestjs/jwt';
 
 @Injectable()
 export class TokensService {
+    private REFRESH_TOKEN = {secret: process.env.REFRESH_TOKEN, expiresIn: '30d'}
+    private PRIVATE_KEY = {secret: process.env.PRIVATE_KEY, expiresIn: '15m'}
+
     constructor(
         @InjectModel(Token)
         private tokenModel: typeof Token,
@@ -13,8 +16,8 @@ export class TokensService {
     }
 
     async generateTokens(payload) {
-        const accessToken = this.jwtService.sign(payload, {expiresIn: '15m'});
-        const refreshToken = this.jwtService.sign({id: payload.id}, {expiresIn: '30d'});
+        const accessToken = this.jwtService.sign(payload, this.PRIVATE_KEY);
+        const refreshToken = this.jwtService.sign({id: payload.id}, this.REFRESH_TOKEN);
         return {
             accessToken,
             refreshToken
@@ -33,9 +36,17 @@ export class TokensService {
         return this.tokenModel.update({refreshToken: ''}, {where: {refreshToken}});
     }
 
+    validateUserToken(token: string) {
+        try {
+            return this.jwtService.verify(token, this.PRIVATE_KEY);
+        } catch (e) {
+            throw new UnauthorizedException({message: 'validateUserToken Error'});
+        }
+    }
+
     async validateRefreshToken(token: string) {
         try {
-            return await this.jwtService.verify(token);
+            return await this.jwtService.verify(token, this.REFRESH_TOKEN);
         } catch (e) {
             throw new UnauthorizedException({message: 'validateRefreshToken Error'});
         }

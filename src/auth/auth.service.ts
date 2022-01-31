@@ -1,5 +1,4 @@
 import {HttpException, HttpStatus, Injectable, UnauthorizedException} from '@nestjs/common';
-import {JwtService} from '@nestjs/jwt';
 import {CreateUserDto} from 'src/users/dto/create-user.dto';
 import {UsersService} from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
@@ -12,7 +11,6 @@ import {UsersEmailService} from "../users/users-email.service";
 export class AuthService {
     constructor(
         private usersService: UsersService,
-        private jwtService: JwtService,
         private refreshService: TokensService,
         private userEmailService: UsersEmailService
     ) {

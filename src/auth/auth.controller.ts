@@ -21,6 +21,7 @@ export class AuthController {
         @Res({ passthrough: true }) res: Response,
         @Body() dto: CreateUserDto,
     ) {
+        console.log(dto)
         const userData = await this.authService.login(dto);
         await res.cookie('refreshToken', userData.refreshToken,{httpOnly:true, expires: this.expiresDate});
         return {...userData};
